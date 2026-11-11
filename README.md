@@ -86,6 +86,16 @@ The correction workflow keeps the sourced data read-mostly: users propose a corr
 - [Phase 2 database design summary](docs/phase2/phase2_database_design.md)
 - [Oracle Phase 2 schema script](docs/phase2/oracle_phase2_schema.sql)
 
+## Phase 3 deliverables
+
+- [Phase 3 implementation notes](docs/phase3/phase3_implementation_notes.md)
+- [Oracle PL/SQL implementation](docs/phase3/phase3_implementation.sql)
+- [Phase 3 smoke test](docs/phase3/phase3_smoke_test.sql)
+
+## Phase 4 deliverable
+
+- [Additional project and dataset-source exploration](docs/phase4/dataset_source_exploration.md)
+
 ## References
 
 The [research log](docs/research/research_log.md) contains the required source type, link, key finding, evidence gap, and personal source-read tracking column.
@@ -101,6 +111,10 @@ The [research log](docs/research/research_log.md) contains the required source t
 data/
   raw/
 docs/
+  phase1/
+  phase2/
+  phase3/
+  phase4/
   presentation/
   proposal/
   research/
@@ -108,4 +122,4 @@ docs/
 
 ## Phase I direction
 
-The Phase I scope is set: build the real-data Rwanda crop benchmark analytics database and Oracle APEX dashboard. Do not model or claim individual-farm tracking without a suitable, authorized, consented farm-level dataset. Phase I will finalize the schema, source keys, unit rules, correction workflow, and test cases within this benchmark-analytics scope.
+The Phase I scope is set: build the real-data Rwanda crop benchmark analytics database and Oracle APEX dashboard. Do not model or claim individual-farm tracking without a suitable, authorized, consented farm-level dataset. Phases II and III define and implement the schema, source keys, unit rules, correction workflow, and test cases within this benchmark-analytics scope.
