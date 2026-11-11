@@ -81,6 +81,11 @@ The correction workflow keeps the sourced data read-mostly: users propose a corr
 - [Rwanda HarvestStat extract](data/raw/adm_crop_data_raw_RW.csv)
 - [World Bank Rwanda agriculture indicators](data/raw/agriculture-and-rural-development_rwa.csv)
 
+## Phase 2 deliverables
+
+- [Phase 2 database design summary](docs/phase2/phase2_database_design.md)
+- [Oracle Phase 2 schema script](docs/phase2/oracle_phase2_schema.sql)
+
 ## References
 
 The [research log](docs/research/research_log.md) contains the required source type, link, key finding, evidence gap, and personal source-read tracking column.
