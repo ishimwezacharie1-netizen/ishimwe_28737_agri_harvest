@@ -1,0 +1,182 @@
+erDiagram
+    SOURCE_DATASET ||--o{ IMPORT_BATCH : has
+    SOURCE_DATASET ||--o{ SOURCE_DOCUMENT : identifies
+    IMPORT_BATCH ||--o{ STAGE_CROP_OBSERVATION : stages
+    IMPORT_BATCH ||--o{ AGG_CROP_STATISTIC : loads
+    ADMIN_1 ||--o{ ADMIN_2 : contains
+    ADMIN_2 o|--o{ ADMIN_AREA : identifies
+    ADMIN_1 o|--o{ ADMIN_AREA : historical_area
+    ADMIN_AREA ||--o{ AGG_CROP_STATISTIC : describes
+    CROP ||--o{ AGG_CROP_STATISTIC : classifies
+    INDICATOR ||--o{ AGG_CROP_STATISTIC : measures
+    SEASON ||--o{ SEASON_YEAR : defines
+    SEASON_YEAR ||--o{ AGG_CROP_STATISTIC : dates
+    SOURCE_DOCUMENT o|--o{ AGG_CROP_STATISTIC : documents
+    STAGE_CROP_OBSERVATION o|--o{ DATA_QUALITY_ISSUE : flags
+    AGG_CROP_STATISTIC o|--o{ DATA_QUALITY_ISSUE : flags
+    AGG_CROP_STATISTIC ||--o{ DATA_CORRECTION_REQUEST : receives
+    AGG_CROP_STATISTIC ||--o{ AUDIT_EVENT : records
+    DATA_CORRECTION_REQUEST o|--o{ AUDIT_EVENT : authorizes
+
+    SOURCE_DATASET {
+        NUMBER dataset_id PK
+        VARCHAR2 dataset_code UK
+        VARCHAR2 dataset_name
+        VARCHAR2 source_url
+        VARCHAR2 license_name
+        DATE license_reviewed_at
+        VARCHAR2 attribution_text
+        TIMESTAMP created_at
+    }
+    IMPORT_BATCH {
+        NUMBER batch_id PK
+        NUMBER dataset_id FK
+        VARCHAR2 batch_code
+        VARCHAR2 file_name
+        VARCHAR2 import_status
+        TIMESTAMP imported_at
+        NUMBER total_rows
+        NUMBER loaded_rows
+        NUMBER rejected_rows
+    }
+    SOURCE_DOCUMENT {
+        NUMBER source_document_id PK
+        NUMBER dataset_id FK
+        VARCHAR2 source_document_code
+        VARCHAR2 source_document_name
+        VARCHAR2 source_organization_code
+        VARCHAR2 source_organization_name
+    }
+    ADMIN_1 {
+        NUMBER admin_1_id PK
+        VARCHAR2 admin_1_name UK
+    }
+    ADMIN_2 {
+        NUMBER admin_2_id PK
+        VARCHAR2 admin_2_name UK
+        NUMBER admin_1_id FK
+    }
+    ADMIN_AREA {
+        VARCHAR2 fnid PK
+        VARCHAR2 geographic_unit_name
+        VARCHAR2 geographic_unit_full_name
+        NUMBER admin_2_id FK
+        NUMBER legacy_admin_1_id FK
+    }
+    CROP {
+        NUMBER crop_id PK
+        VARCHAR2 crop_code UK
+        VARCHAR2 crop_name UK
+        VARCHAR2 crop_description
+    }
+    INDICATOR {
+        NUMBER indicator_id PK
+        VARCHAR2 indicator_code UK
+        VARCHAR2 indicator_name UK
+        VARCHAR2 allowed_unit
+        VARCHAR2 unit_name
+    }
+    SEASON {
+        NUMBER season_id PK
+        VARCHAR2 season_name UK
+    }
+    SEASON_YEAR {
+        NUMBER season_year_id PK
+        NUMBER season_id FK
+        NUMBER observation_year
+        VARCHAR2 season_year_label UK
+        DATE start_date
+        DATE period_date
+        DATE season_date
+    }
+    STAGE_CROP_OBSERVATION {
+        NUMBER stage_row_id PK
+        NUMBER batch_id FK
+        VARCHAR2 source_organization
+        VARCHAR2 source_document
+        VARCHAR2 geographic_unit_full_name
+        VARCHAR2 geographic_unit_name
+        VARCHAR2 fnid
+        VARCHAR2 admin_1
+        VARCHAR2 admin_2
+        VARCHAR2 start_date_raw
+        VARCHAR2 period_date_raw
+        VARCHAR2 season_name
+        VARCHAR2 season_date_raw
+        VARCHAR2 season_year
+        VARCHAR2 indicator_name
+        VARCHAR2 source_status
+        VARCHAR2 value_raw
+        VARCHAR2 population_raw
+        VARCHAR2 value_per_capita_raw
+        VARCHAR2 product_name
+        VARCHAR2 locality_name
+        VARCHAR2 unit_code
+        VARCHAR2 unit_name
+        VARCHAR2 crop_code
+        VARCHAR2 crop_description
+        VARCHAR2 source_record_id
+        VARCHAR2 data_collection_period
+        VARCHAR2 data_collection_code
+        VARCHAR2 source_document_code
+        VARCHAR2 source_organization_code
+        VARCHAR2 indicator_code
+        VARCHAR2 locality_code
+        VARCHAR2 geographic_unit_code
+        VARCHAR2 season_code
+        VARCHAR2 data_series
+        VARCHAR2 data_series_name
+        VARCHAR2 created_raw
+        VARCHAR2 modified_raw
+        VARCHAR2 status_changed_raw
+        VARCHAR2 collection_status_changed_raw
+        VARCHAR2 collection_date_raw
+        VARCHAR2 row_status
+    }
+    AGG_CROP_STATISTIC {
+        NUMBER statistic_id PK
+        NUMBER batch_id FK
+        NUMBER source_document_id FK
+        VARCHAR2 fnid FK
+        NUMBER crop_id FK
+        NUMBER indicator_id FK
+        NUMBER season_year_id FK
+        VARCHAR2 source_record_id
+        NUMBER numeric_value
+        VARCHAR2 quality_status
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
+    DATA_QUALITY_ISSUE {
+        NUMBER issue_id PK
+        NUMBER stage_row_id FK
+        NUMBER statistic_id FK
+        VARCHAR2 issue_type
+        VARCHAR2 severity
+        VARCHAR2 issue_description
+        TIMESTAMP reported_at
+        CHAR resolved_flag
+    }
+    DATA_CORRECTION_REQUEST {
+        NUMBER correction_id PK
+        NUMBER statistic_id FK
+        VARCHAR2 requested_by
+        TIMESTAMP request_date
+        NUMBER original_value
+        NUMBER proposed_value
+        CLOB reason_text
+        CLOB evidence_text
+        VARCHAR2 request_status
+        VARCHAR2 reviewer_user
+        TIMESTAMP reviewed_at
+    }
+    AUDIT_EVENT {
+        NUMBER audit_id PK
+        NUMBER statistic_id FK
+        NUMBER correction_id FK
+        NUMBER old_value
+        NUMBER new_value
+        VARCHAR2 changed_by
+        TIMESTAMP changed_at
+        VARCHAR2 change_reason
+    }

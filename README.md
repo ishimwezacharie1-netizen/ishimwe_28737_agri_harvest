@@ -43,11 +43,13 @@ The project is titled **Agricultural Production and Harvest Tracking System**; i
 |---|---|---|
 | `SOURCE_DATASET` | Citation, license, file/version, and provenance | Current benchmark core |
 | `IMPORT_BATCH` | Import status, timestamps, and load counts | Current benchmark core |
-| `ADMIN_AREA` | Original geography labels/codes and historical period | Current benchmark core |
+| `SOURCE_DOCUMENT` | Source document and organization attribution | Current benchmark core |
+| `ADMIN_1`, `ADMIN_2`, `ADMIN_AREA` | Normalized parent, district, and FNID geography | Current benchmark core |
 | `CROP` | Crop/product dimension | Current benchmark core |
-| `SEASON` | Source season name/type and year labels | Current benchmark core |
+| `SEASON`, `SEASON_YEAR` | Season and observation-period dimensions | Current benchmark core |
 | `INDICATOR` | Indicator definition and permitted unit | Current benchmark core |
-| `AGG_CROP_STATISTIC` | Sourced aggregate observation and numeric value | Current benchmark fact table |
+| `STAGE_CROP_OBSERVATION` | All retained raw source fields, before validation | Current benchmark core |
+| `AGG_CROP_STATISTIC` | Validated aggregate observation and numeric value | Current benchmark fact table |
 | `DATA_QUALITY_ISSUE` | Missing, invalid-unit, duplicate, or rejected observations | Current benchmark core |
 | `DATA_CORRECTION_REQUEST` | Proposed, reviewed corrections to flagged benchmark values | Controlled correction workflow |
 | `AUDIT_EVENT` | Approved changes and audit metadata | Current benchmark core |
@@ -69,7 +71,7 @@ The project is titled **Agricultural Production and Harvest Tracking System**; i
 | Audit trigger `TRG_AGG_AUDIT` | Record old/new values, user, timestamp, and correction-request ID for approved changes to curated statistics. |
 | Custom exceptions | `E_INVALID_UNIT`, `E_CORRECTION_NOT_FOUND`, `E_CORRECTION_NOT_APPROVED`, and `E_UNAUTHORIZED_REVIEWER` explain rejected imports or correction actions. |
 
-The correction workflow keeps the sourced data read-mostly: users propose a correction with evidence and rationale; an authorized reviewer approves or rejects it; the package applies approved changes; and the audit trigger records them. Phase I will define and test the authorization and application-context rules.
+The correction workflow keeps the sourced data read-mostly: users propose a correction with evidence and rationale; an authorized reviewer approves or rejects it; the package applies approved changes; and the audit trigger records them. Authorization and application-context rules remain to be implemented and tested with the PL/SQL features.
 
 ## Phase 0 deliverables
 
@@ -81,19 +83,33 @@ The correction workflow keeps the sourced data read-mostly: users propose a corr
 - [Rwanda HarvestStat extract](data/raw/adm_crop_data_raw_RW.csv)
 - [World Bank Rwanda agriculture indicators](data/raw/agriculture-and-rural-development_rwa.csv)
 
-## Phase 2 deliverables
+## Phase II: Data sourcing and normalization
 
-- [Phase 2 database design summary](docs/phase2/phase2_database_design.md)
-- [Oracle Phase 2 schema script](docs/phase2/oracle_phase2_schema.sql)
+- [Source evidence, cleaning decisions, and 1NF/2NF/3NF design](docs/phase2/phase2_database_design.md)
+- [Normalized schema DDL](docs/phase2/oracle_phase2_schema.sql)
+- [Entity-relationship diagram](docs/phase2/phase2_erd.mmd)
+- [Complete data dictionary](docs/phase2/phase2_data_dictionary.md)
 
-## Phase 3 deliverables
+## Phase III: Database (PDB) creation
 
-- [Phase 3 implementation notes](docs/phase3/phase3_implementation_notes.md)
-- [Oracle PL/SQL implementation](docs/phase3/phase3_implementation.sql)
-- [Phase 3 smoke test](docs/phase3/phase3_smoke_test.sql)
+**Pending Oracle environment setup and evidence.** The PDB, project schema/user, tablespaces, SQL Developer connection, and OEM screenshots have not been created or verified in this workspace. Follow the instructor's PDB naming convention when available.
 
-## Phase 4 deliverable
+## Phase IV: Tables and data loading
 
+The normalized schema is the Phase II DDL. Phase IV scripts now prepare an import batch, load lookup/fact tables in dependency order, log missing values, and validate counts and keys. They have not yet been executed against Oracle, so database results and evidence remain pending.
+
+- [Import, create, and load instructions](docs/phase4/phase4_loading_guide.md)
+- [Prepare source dataset and import batch](docs/phase4/phase4_prepare.sql)
+- [Load normalized lookups, facts, and missing-value issues](docs/phase4/phase4_load.sql)
+- [Validation queries and expected counts](docs/phase4/phase4_validation.sql)
+
+## Supplementary drafts and dataset research
+
+The following work predates the official Phase III/IV definitions above; it is not evidence that PDB creation or CSV loading has been completed:
+
+- [PL/SQL implementation draft](docs/phase3/phase3_implementation.sql)
+- [PL/SQL draft notes](docs/phase3/phase3_implementation_notes.md)
+- [PL/SQL draft smoke test](docs/phase3/phase3_smoke_test.sql)
 - [Additional project and dataset-source exploration](docs/phase4/dataset_source_exploration.md)
 
 ## References
@@ -122,4 +138,4 @@ docs/
 
 ## Phase I direction
 
-The Phase I scope is set: build the real-data Rwanda crop benchmark analytics database and Oracle APEX dashboard. Do not model or claim individual-farm tracking without a suitable, authorized, consented farm-level dataset. Phases II and III define and implement the schema, source keys, unit rules, correction workflow, and test cases within this benchmark-analytics scope.
+The Phase I scope is set: build the real-data Rwanda crop benchmark analytics database and Oracle APEX dashboard. Do not model or claim individual-farm tracking without a suitable, authorized, consented farm-level dataset. Phase II defines the normalized schema, source keys, units, and data-quality handling within this benchmark-analytics scope.
